@@ -11,8 +11,8 @@ export function calculateEuler(eqDif, x0, a, b, nPoints) {
   }
 
   let x = x0;
-  for (let t = 0; t < nPoints; t++) {
-    let t = t*h+x0;    
+  for (let tIndex = 0; tIndex < nPoints; tIndex++) {
+    let t = tIndex*h+x0;    
     x = x + h*f(t,x);
     points.push({x: t, y: x});
   }

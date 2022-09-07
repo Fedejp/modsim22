@@ -31,14 +31,7 @@ function App() {
       `Current State: ${eqDif} ${selectedMethod} ${initialCondition} ${intervalStart} ${intervalEnd} ${nPoints} `
     );
     let points = [];
-    points = calculateEuler(
-      eqDif,
-      initialCondition,
-      intervalStart,
-      intervalEnd,
-      nPoints
-    );
-  /*  switch (selectedMethod) {
+    switch (selectedMethod) {
       case "euler":
         points = calculateEuler(
           eqDif,
@@ -60,7 +53,7 @@ function App() {
       default:
         alert("Seleccione un metodo!");
         break;
-    }*/
+    }
     console.log(points);
     setGraphPoints(points);
   };
