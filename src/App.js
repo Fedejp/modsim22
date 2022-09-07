@@ -1,6 +1,6 @@
 import "./App.css";
 import "../node_modules/react-vis/dist/style.css";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   XAxis,
   YAxis,
@@ -11,24 +11,43 @@ import {
 } from "react-vis";
 import { calculateEuler } from "./euler";
 import { calculateEulerPlus } from "./eulerPlus";
+import Slider from "react-input-slider";
 
 function App() {
   const [eqDif, setEqDif] = useState("x + t");
-  const [selectedMethod, setSelectedMethod] = useState(undefined);
+  const [selectedMethod, setSelectedMethod] = useState("euler");
   const [initialCondition, setInitialCondition] = useState(0);
   const [intervalStart, setIntervalStart] = useState(0);
   const [intervalEnd, setIntervalEnd] = useState(1);
   const [nPoints, setPoints] = useState(10);
-
+  const [graphDelay, setGraphDelay] = useState(0);
   const [graphPoints, setGraphPoints] = useState([
     { x: 1, y: 1 },
     { x: 2, y: 2 },
   ]);
 
-  const plotState = (e) => {
+  const delayRef = useRef(graphDelay);
+  const graphPointsRef = useRef(graphPoints);
+  const [dataPoints, setDataPoints] = useState([]);
+
+  useEffect(() => {
+    const timeouts = [];
+    // setGraphPoints([dataPoints[0]]);
+    for (let i = 0; i < dataPoints.length; i++) {
+      timeouts.push(
+        setTimeout(() => {
+          setGraphPoints(...graphPoints, dataPoints[i]);
+        }, graphDelay * 10 * i)
+      );
+    }
+
+    return () => timeouts.forEach((timeout) => clearTimeout(timeout));
+  }, [dataPoints]);
+
+  const getPoints = (e) => {
     e.preventDefault();
     console.log(
-      `Current State: ${eqDif} ${selectedMethod} ${initialCondition} ${intervalStart} ${intervalEnd} ${nPoints} `
+      `Current State: ${eqDif} ${selectedMethod} ${initialCondition} ${intervalStart} ${intervalEnd} ${nPoints} ${graphDelay} `
     );
     let points = [];
     switch (selectedMethod) {
@@ -54,8 +73,10 @@ function App() {
         alert("Seleccione un metodo!");
         break;
     }
-    console.log(points);
-    setGraphPoints(points);
+
+    setDataPoints(points);
+
+    console.log(graphPoints);
   };
 
   return (
@@ -73,7 +94,7 @@ function App() {
       <div className="content">
         <div className="form">
           <h3>Inputs:</h3>
-          <form onSubmit={plotState}>
+          <form onSubmit={getPoints}>
             <label>
               Método de aproximación:
               <select
@@ -124,6 +145,25 @@ function App() {
                 onChange={(e) => setPoints(e.target.value)}
               ></input>
             </label>
+            <div className="slider">
+              <label>
+                Retraso en graficación (en ms)
+                <Slider
+                  axis="x"
+                  x={graphDelay}
+                  styles={{
+                    track: {
+                      width: "100%",
+                    },
+                    active: {
+                      backgroundColor: "#04AA6D",
+                    },
+                  }}
+                  onChange={({ x }) => setGraphDelay(x)}
+                />
+              </label>
+            </div>
+
             <input type="submit" value="Graficar!"></input>
           </form>
         </div>
@@ -152,7 +192,6 @@ function App() {
               opacity={0.4}
               lineStyle={{ stroke: "black" }}
               data={graphPoints}
-              size={2}
             />
           </FlexibleXYPlot>
         </div>
