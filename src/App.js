@@ -1,6 +1,7 @@
 import "./App.css";
+import { eulerInfo, eulerPlusInfo, compareInfo } from "./info";
 import "../node_modules/react-vis/dist/style.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   XAxis,
   YAxis,
@@ -12,6 +13,7 @@ import {
 import { calculateEuler } from "./euler";
 import { calculateEulerPlus } from "./eulerPlus";
 import Slider from "react-input-slider";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 function App() {
   const [eqDif, setEqDif] = useState("x + t");
@@ -21,62 +23,86 @@ function App() {
   const [intervalEnd, setIntervalEnd] = useState(1);
   const [nPoints, setPoints] = useState(10);
   const [graphDelay, setGraphDelay] = useState(0);
-  const [graphPoints, setGraphPoints] = useState([
+  const [eulerPoints, setEulerPoints] = useState([
     { x: 1, y: 1 },
     { x: 2, y: 2 },
   ]);
+  const [eulerPlusPoints, setEulerPlusPoints] = useState([
+    { x: 1, y: 1 },
+    { x: 2, y: 2 },
+  ]);
+  const [showEuler, setShowEuler] = useState(true);
+  const [showEulerPlus, setShowEulerPlus] = useState(false);
+  const [containsInfinity, setContainsInfinity] = useState(false);
+  // useEffect(() => {
+  //   const timeouts = [];
+  //   // setGraphPoints([dataPoints[0]]);
+  //   for (let i = 0; i < dataPoints.length; i++) {
+  //     timeouts.push(
+  //       setTimeout(() => {
+  //         setGraphPoints(...graphPoints, dataPoints[i]);
+  //       }, graphDelay * 10 * i)
+  //     );
+  //   }
 
-  const delayRef = useRef(graphDelay);
-  const graphPointsRef = useRef(graphPoints);
-  const [dataPoints, setDataPoints] = useState([]);
+  //   return () => timeouts.forEach((timeout) => clearTimeout(timeout));
+  // }, [dataPoints]);
 
   useEffect(() => {
-    const timeouts = [];
-    // setGraphPoints([dataPoints[0]]);
-    for (let i = 0; i < dataPoints.length; i++) {
-      timeouts.push(
-        setTimeout(() => {
-          setGraphPoints(...graphPoints, dataPoints[i]);
-        }, graphDelay * 10 * i)
-      );
-    }
+    const infinityPointEuler = eulerPoints.find(
+      (point) => point.x === Infinity || point.y === Infinity
+    );
+    const infinityPointEulerPlus = eulerPlusPoints.find(
+      (point) => point.x === Infinity || point.y === Infinity
+    );
 
-    return () => timeouts.forEach((timeout) => clearTimeout(timeout));
-  }, [dataPoints]);
+    setContainsInfinity(
+      infinityPointEuler !== undefined || infinityPointEulerPlus !== undefined
+    );
+  }, [eulerPoints, eulerPlusPoints]);
 
   const getPoints = (e) => {
     e.preventDefault();
     console.log(
       `Current State: ${eqDif} ${selectedMethod} ${initialCondition} ${intervalStart} ${intervalEnd} ${nPoints} ${graphDelay} `
     );
-    let points = [];
+    setEulerPoints(
+      calculateEuler(
+        eqDif,
+        initialCondition,
+        intervalStart,
+        intervalEnd,
+        nPoints
+      )
+    );
+    setEulerPlusPoints(
+      calculateEulerPlus(
+        eqDif,
+        initialCondition,
+        intervalStart,
+        intervalEnd,
+        nPoints
+      )
+    );
     switch (selectedMethod) {
       case "euler":
-        points = calculateEuler(
-          eqDif,
-          initialCondition,
-          intervalStart,
-          intervalEnd,
-          nPoints
-        );
+        setShowEuler(true);
+        setShowEulerPlus(false);
         break;
       case "eulerPlus":
-        points = calculateEulerPlus(
-          eqDif,
-          initialCondition,
-          intervalStart,
-          intervalEnd,
-          nPoints
-        );
+        setShowEuler(false);
+        setShowEulerPlus(true);
+        break;
+      case "compare":
+        setShowEuler(true);
+        setShowEulerPlus(true);
         break;
       default:
+        setShowEuler(false);
+        setShowEulerPlus(false);
         alert("Seleccione un metodo!");
         break;
     }
-
-    setDataPoints(points);
-
-    console.log(graphPoints);
   };
 
   return (
@@ -103,6 +129,9 @@ function App() {
               >
                 <option value="euler">Euler</option>
                 <option value="eulerPlus">Euler Mejorado</option>
+                <option value="compare">
+                  Comparar Euler con Euler Mejorado
+                </option>
               </select>
             </label>
             <label>
@@ -163,7 +192,6 @@ function App() {
                 />
               </label>
             </div>
-
             <input type="submit" value="Graficar!"></input>
           </form>
         </div>
@@ -184,17 +212,48 @@ function App() {
             <HorizontalGridLines />
             <XAxis />
             <YAxis />
-            <LineSeries
-              style={{
-                strokeWidth: "4px",
-                color: "black",
-              }}
-              opacity={0.4}
-              lineStyle={{ stroke: "black" }}
-              data={graphPoints}
-            />
+            {showEuler && (
+              <LineSeries
+                style={{
+                  strokeWidth: "4px",
+                  color: "black",
+                }}
+                opacity={0.4}
+                lineStyle={{ stroke: "black" }}
+                data={eulerPoints}
+              />
+            )}
+            {showEulerPlus && (
+              <LineSeries
+                style={{
+                  strokeWidth: "4px",
+                  color: "red",
+                }}
+                opacity={0.4}
+                lineStyle={{ stroke: "red" }}
+                data={eulerPlusPoints}
+              />
+            )}
+            {containsInfinity && (
+              <span className="error">
+                {" "}
+                Los parámetros introducidos han alcanzado el límite
+                computacional del dispositivo. El resultado del gráfico está
+                truncado.
+              </span>
+            )}
           </FlexibleXYPlot>
         </div>
+      </div>
+      <div className="info">
+        <h3>Información acerca del método de aproximación</h3>
+        {showEuler && <ReactMarkdown children={eulerInfo}></ReactMarkdown>}
+        {showEulerPlus && (
+          <ReactMarkdown children={eulerPlusInfo}></ReactMarkdown>
+        )}
+        {showEuler && showEulerPlus && (
+          <ReactMarkdown children={compareInfo}></ReactMarkdown>
+        )}
       </div>
     </div>
   );

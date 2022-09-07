@@ -43,6 +43,10 @@ select {
   background-color: #f1f1f1;
 }
 
+.error  {
+  color: red;
+  font-weight: 600;
+}
 .slider {
   margin: 4px 0px 12px;  
 }
