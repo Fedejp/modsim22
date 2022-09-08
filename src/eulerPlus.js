@@ -1,20 +1,20 @@
 import * as math from "mathjs";
 
 export function calculateEulerPlus(eqDif, x0, a, b, nPoints) {
-  const points = [];
+  const points = [{ x: Number(a), y: Number(x0) }];
   const h = (b - a) / nPoints;
   // points.push({ x: 0, y: x0 });
 
-  const f = (t, x) => {
+  const f = (x, t) => {
     const result = math.evaluate([`x = ${x}`, `t = ${t}`, eqDif])[2];
     return result;
   };
 
   let x = Number(x0);
-  for (let tIndex = 0; tIndex <= nPoints; tIndex++) {
-    let t = tIndex * h + Number(x0);
-    let aproximacionX = x + h * f(t + 1, x);
-    x = x + (h * (f(t, x) + f(t, aproximacionX))) / 2;
+  for (let index = 1; index <= nPoints; index++) {
+    let t = index * h + Number(a);
+    let aproximacionX = x + h * f(x, (index - 1) * h + Number(a));
+    x = x + (h * (f(x, t) + f(aproximacionX, t))) / 2;
 
     points.push({ x: t, y: x });
   }
