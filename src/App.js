@@ -9,11 +9,13 @@ import {
   VerticalGridLines,
   FlexibleXYPlot,
   LineSeries,
+  DecorativeAxis,
 } from "react-vis";
 import { calculateEuler } from "./euler";
 import { calculateEulerPlus } from "./eulerPlus";
-import Slider from "react-input-slider";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { nightOwl } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 function App() {
   const [eqDif, setEqDif] = useState("x + t");
@@ -26,6 +28,7 @@ function App() {
   const [eulerPoints, setEulerPoints] = useState([
     { x: 1, y: 1 },
     { x: 2, y: 2 },
+    { x: 3, y: 3 },
   ]);
   const [eulerPlusPoints, setEulerPlusPoints] = useState([
     { x: 1, y: 1 },
@@ -34,19 +37,23 @@ function App() {
   const [showEuler, setShowEuler] = useState(true);
   const [showEulerPlus, setShowEulerPlus] = useState(false);
   const [containsInfinity, setContainsInfinity] = useState(false);
-  // useEffect(() => {
-  //   const timeouts = [];
-  //   // setGraphPoints([dataPoints[0]]);
-  //   for (let i = 0; i < dataPoints.length; i++) {
-  //     timeouts.push(
-  //       setTimeout(() => {
-  //         setGraphPoints(...graphPoints, dataPoints[i]);
-  //       }, graphDelay * 10 * i)
-  //     );
-  //   }
+  const [delayedPoints, setDelayedPoints] = useState([]);
 
-  //   return () => timeouts.forEach((timeout) => clearTimeout(timeout));
-  // }, [dataPoints]);
+  // useEffect(() => {
+  //   setDelayedPoints([]);
+  //   const delayPoints = async () => {
+  //     const auxPoints = [];
+  //     await eulerPoints.forEach(async (point, index) => {
+  //       console.log("Timeout n " + index);
+  //       setTimeout(() => {
+  //         auxPoints.push(point);
+  //         setDelayedPoints(auxPoints);
+  //         console.log("resolved timeout n " + index);
+  //       }, 1000 * index);
+  //     });
+  //   };
+  //   delayPoints();
+  // }, [eulerPoints]);
 
   useEffect(() => {
     const infinityPointEuler = eulerPoints.find(
@@ -174,7 +181,7 @@ function App() {
                 onChange={(e) => setPoints(e.target.value)}
               ></input>
             </label>
-            <div className="slider">
+            {/* <div className="slider">
               <label>
                 Retraso en graficación (en ms)
                 <Slider
@@ -191,35 +198,34 @@ function App() {
                   onChange={({ x }) => setGraphDelay(x)}
                 />
               </label>
-            </div>
+            </div> */}
             <input type="submit" value="Graficar!"></input>
           </form>
         </div>
         <div className="graph">
           <h3> Grafico aproximado: </h3>
           <FlexibleXYPlot
-            width={1280}
+            width={1200}
             height={550}
             style={{
               backgroundColor: "#FFFFFF",
               position: "center",
-              marginTop: 20,
+              marginTop: 16,
               padding: 8,
             }}
             dontCheckIfEmpty={true}
           >
             <VerticalGridLines />
             <HorizontalGridLines />
-            <XAxis />
-            <YAxis />
+            <XAxis title="t" />
+            <YAxis title="f(x)" />
             {showEuler && (
               <LineSeries
                 style={{
                   strokeWidth: "4px",
-                  color: "black",
+                  stroke: "#04AA6D",
                 }}
-                opacity={0.4}
-                lineStyle={{ stroke: "black" }}
+                opacity={0.5}
                 data={eulerPoints}
               />
             )}
@@ -227,9 +233,9 @@ function App() {
               <LineSeries
                 style={{
                   strokeWidth: "4px",
-                  color: "red",
+                  stroke: "#1690FF",
                 }}
-                opacity={0.4}
+                opacity={0.5}
                 lineStyle={{ stroke: "red" }}
                 data={eulerPlusPoints}
               />
@@ -247,12 +253,74 @@ function App() {
       </div>
       <div className="info">
         <h3>Información acerca del método de aproximación</h3>
-        {showEuler && <ReactMarkdown children={eulerInfo}></ReactMarkdown>}
-        {showEulerPlus && (
-          <ReactMarkdown children={eulerPlusInfo}></ReactMarkdown>
+        {showEuler && !showEulerPlus && (
+          <ReactMarkdown
+            children={eulerInfo}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, "")}
+                    style={nightOwl}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  />
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          ></ReactMarkdown>
+        )}
+        {!showEuler && showEulerPlus && (
+          <ReactMarkdown
+            children={eulerPlusInfo}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, "")}
+                    style={nightOwl}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  />
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          ></ReactMarkdown>
         )}
         {showEuler && showEulerPlus && (
-          <ReactMarkdown children={compareInfo}></ReactMarkdown>
+          <ReactMarkdown
+            children={compareInfo}
+            components={{
+              code({ node, inline, className, children, ...props }) {
+                const match = /language-(\w+)/.exec(className || "");
+                return !inline && match ? (
+                  <SyntaxHighlighter
+                    children={String(children).replace(/\n$/, "")}
+                    style={nightOwl}
+                    language={match[1]}
+                    PreTag="div"
+                    {...props}
+                  />
+                ) : (
+                  <code className={className} {...props}>
+                    {children}
+                  </code>
+                );
+              },
+            }}
+          ></ReactMarkdown>
         )}
       </div>
     </div>
