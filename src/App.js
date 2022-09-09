@@ -9,7 +9,6 @@ import {
   VerticalGridLines,
   FlexibleXYPlot,
   LineSeries,
-  DecorativeAxis,
 } from "react-vis";
 import { calculateEuler } from "./euler";
 import { calculateEulerPlus } from "./eulerPlus";
@@ -24,7 +23,6 @@ function App() {
   const [intervalStart, setIntervalStart] = useState(0);
   const [intervalEnd, setIntervalEnd] = useState(1);
   const [nPoints, setPoints] = useState(10);
-  const [graphDelay, setGraphDelay] = useState(0);
   const [eulerPoints, setEulerPoints] = useState([
     { x: 1, y: 1 },
     { x: 2, y: 2 },
@@ -71,7 +69,7 @@ function App() {
   const getPoints = (e) => {
     e.preventDefault();
     console.log(
-      `Current State: ${eqDif} ${selectedMethod} ${initialCondition} ${intervalStart} ${intervalEnd} ${nPoints} ${graphDelay} `
+      `Current State: ${eqDif} ${selectedMethod} ${initialCondition} ${intervalStart} ${intervalEnd} ${nPoints} `
     );
     setEulerPoints(
       calculateEuler(
