@@ -6,7 +6,8 @@ export function calculateEulerPlus(eqDif, x0, a, b, nPoints) {
   // points.push({ x: 0, y: x0 });
 
   const f = (x, t) => {
-    const result = math.evaluate([`x = ${x}`, `t = ${t}`, eqDif])[2];
+    const der = math.derivative(eqDif, "t").toString();
+    const result = math.evaluate([`x = ${x}`, `t = ${t}`, der])[2];
     return result;
   };
 
