@@ -1,70 +1,27 @@
-# Getting Started with Create React App
+# Representación aproximada de ecuaciones diferenciales
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Modelado y simulación - UADE - 2do Cuatrimestre 2022
 
-## Available Scripts
+Autores:
+Federico J. Parodi
+Carlos S. Yanzon
 
-In the project directory, you can run:
+### Instalación
 
-### `npm start`
+Prerrequisito: contar con Node v16 o superior instalado en el dispositivo.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Descomprimir el paquete .zip provisto en Webcampus o clonar el repositorio en una carpeta vacía.
+2. Abrir una ventana de terminal, posicionarse en la carpeta donde se ha descomprimido o clonado el proyecto y ejecutar el comando npm i. En caso de que se produzca un error por la librería ‘react-vis’, agregar el argumento --force.
+3. Ejecutar el comando npm run start. Se abrirá una ventana del navegador con la herramienta lista para usar. Si no es el caso, acceder a través de http://localhost:3000, o el puerto que se haya indicado.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Uso: Representación aproximada de ecuaciones diferenciales
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1. Seleccionar el método de aproximación (Euler, Euler Mejorado o Comparación)
+2. Introducir la ecuación diferencial deseada. Para referencia de formato y ejemplos, dirigirse a https://mathjs.org/docs/expressions/syntax.html.
+3. Indicar la condición inicial (x0)
+4. Indicar el inicio del intervalo de interés (a)
+5. Indicar el fin del intervalo de interés (b)
+6. Indicar la cantidad de segmentos a utilizar para aproximar la función (n)
+7. Clickear en “Graficar!” y analizar el resultado obtenido en el gráfico de la derecha.
+   a) En la consola, se devuelven los valores de los puntos graficados tanto para Euler como para Euler mejorado.
+8. Debajo del gráfico se ofrece información del método seleccionado y la implementación en Javascript del mismo, como referencia.
