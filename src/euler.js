@@ -12,7 +12,7 @@ export function calculateEuler(eqDif, x0, a, b, nPoints) {
   let x = Number(x0);
   for (let index = 1; index <= nPoints; index++) {
     let t = index * h + Number(a);
-    x = x + h * f(x, (index - 1) * h + Number(a)); // CHECK
+    x = x + h * f(x, (index - 1) * h + Number(a));
     points.push({ x: t, y: x });
   }
   console.log(points);

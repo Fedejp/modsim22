@@ -35,23 +35,6 @@ function App() {
   const [showEuler, setShowEuler] = useState(true);
   const [showEulerPlus, setShowEulerPlus] = useState(false);
   const [containsInfinity, setContainsInfinity] = useState(false);
-  const [delayedPoints, setDelayedPoints] = useState([]);
-
-  // useEffect(() => {
-  //   setDelayedPoints([]);
-  //   const delayPoints = async () => {
-  //     const auxPoints = [];
-  //     await eulerPoints.forEach(async (point, index) => {
-  //       console.log("Timeout n " + index);
-  //       setTimeout(() => {
-  //         auxPoints.push(point);
-  //         setDelayedPoints(auxPoints);
-  //         console.log("resolved timeout n " + index);
-  //       }, 1000 * index);
-  //     });
-  //   };
-  //   delayPoints();
-  // }, [eulerPoints]);
 
   useEffect(() => {
     const infinityPointEuler = eulerPoints.find(
@@ -113,7 +96,7 @@ function App() {
   return (
     <div className="App">
       <h1>Modelado y simulación - 2022</h1>
-      <h2>Ecuaciones diferenciales</h2>
+      <h2>Representación aproximada de ecuaciones diferenciales </h2>
       <p>
         Este proyecto ofrece una graficadora de ecuaciones diferenciales,
         aproximadas por distintos métodos
@@ -179,24 +162,6 @@ function App() {
                 onChange={(e) => setPoints(e.target.value)}
               ></input>
             </label>
-            {/* <div className="slider">
-              <label>
-                Retraso en graficación (en ms)
-                <Slider
-                  axis="x"
-                  x={graphDelay}
-                  styles={{
-                    track: {
-                      width: "100%",
-                    },
-                    active: {
-                      backgroundColor: "#04AA6D",
-                    },
-                  }}
-                  onChange={({ x }) => setGraphDelay(x)}
-                />
-              </label>
-            </div> */}
             <input type="submit" value="Graficar!"></input>
           </form>
         </div>
