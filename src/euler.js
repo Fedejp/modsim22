@@ -5,8 +5,7 @@ export function calculateEuler(eqDif, x0, a, b, nPoints) {
   const h = (b - a) / nPoints;
 
   const f = (x, t) => {
-    const der = math.derivative(eqDif, "t").toString();
-    const result = math.evaluate([`x = ${x}`, `t = ${t}`, der])[2];
+    const result = math.evaluate([`x = ${x}`, `t = ${t}`, eqDif])[2];
     return result;
   };
 
