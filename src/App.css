@@ -15,6 +15,14 @@
   margin: 16px;
   text-align: left;
 }
+
+.info {
+  margin: 0px 196px;
+  text-align: justify;
+}
+.info p img {
+  text-align: center;
+}
 input {
   width: 100%;
   padding: 12px 20px;
