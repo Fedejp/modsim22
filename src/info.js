@@ -56,13 +56,11 @@ import * as math from "mathjs";
 export function calculateEulerPlus(eqDif, x0, a, b, nPoints) {
   const points = [{ x: Number(a), y: Number(x0) }];
   const h = (b - a) / nPoints;
-  // points.push({ x: 0, y: x0 });
 
   const f = (x, t) => {
     const result = math.evaluate([\`x = \${x}\`, \`t = \${t}\`, eqDif])[2];
     return result;
   };
-
   let x = Number(x0);
   for (let index = 1; index <= nPoints; index++) {
     let t = index * h + Number(a);
@@ -75,6 +73,7 @@ export function calculateEulerPlus(eqDif, x0, a, b, nPoints) {
 
   return points;
 }
+
 ~~~
 
 `;
@@ -83,6 +82,11 @@ export const compareInfo = `#### Comparación entre los métodos
 Euler = Linea Verde
 
 Euler mejorado = Linea Celeste
+
+El método de Euler mejorado obtiene una mejor aproximación gracias al cálculo extra, que el método de Euler convencional carece. Cómo se puede observar en el código adjunto, las funciones son sencillas y de bajo costo computacional:  ambos métodos tienen una complejidad computacional lineal, aunque en el método de Euler mejorado se deben realizar 2 cálculos por punto, no agrega más ciclos ni más iteraciones por punto. Sin embargo, estos cálculos extra pueden afectar el resultado final si la capacidad de cómputo del dispositivo y/o su precisión son limitadas.
+
+Podemos concluir que en casos donde existe una alta cantidad de puntos a trazar el algoritmo de euler es superior a euler mejorado en costos, pero no en aproximación.
+
 
 #### Implementacion en JavaScript (Euler)
 ~~~js
@@ -117,13 +121,11 @@ import * as math from "mathjs";
 export function calculateEulerPlus(eqDif, x0, a, b, nPoints) {
   const points = [{ x: Number(a), y: Number(x0) }];
   const h = (b - a) / nPoints;
-  // points.push({ x: 0, y: x0 });
 
   const f = (x, t) => {
     const result = math.evaluate([\`x = \${x}\`, \`t = \${t}\`, eqDif])[2];
     return result;
   };
-
   let x = Number(x0);
   for (let index = 1; index <= nPoints; index++) {
     let t = index * h + Number(a);
@@ -136,5 +138,6 @@ export function calculateEulerPlus(eqDif, x0, a, b, nPoints) {
 
   return points;
 }
+
 ~~~
 `;
